@@ -290,6 +290,7 @@ class Project < ActiveRecord::Base
       self.wiki_repository.owner = another_owner
 
       repositories.mainlines.each {|repo|
+        next if repo.committerships.any? { |cs| cs.committer == another_owner }
         c = repo.committerships.create!(:committer => another_owner,:creator_id => self.owner_id_was)
         c.build_permissions(:review, :commit, :admin)
         c.save!
